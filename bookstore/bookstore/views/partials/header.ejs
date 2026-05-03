@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'BookStore' %> — BookVault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/books" class="nav-brand">
+      <span class="brand-icon"></span>
+      <span class="brand-text">BookVault</span>
+    </a>
+    <div class="nav-links">
+      <a href="/books" class="nav-link">All Books</a>
+      <a href="/books/new" class="nav-btn">+ Add Book</a>
+    </div>
+  </div>
+</nav>
+
+<main class="main-content">

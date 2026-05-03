@@ -1,0 +1,110 @@
+<%- include('partials/header', { title: 'All Books' }) %>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1 class="page-title">Book Collection</h1>
+    <p class="page-subtitle">Manage your entire bookstore inventory</p>
+  </div>
+  <a href="/books/new" class="btn btn-primary">+ Add New Book</a>
+</div>
+<% if (success) { %>
+  <div class="alert alert-success"> <%= success %></div>
+<% } %>
+<% if (error) { %>
+  <div class="alert alert-error"> <%= error %></div>
+<% } %>
+<div class="stats-bar">
+  <div class="stat-card">
+    <span class="stat-icon"></span>
+    <div class="stat-info">
+      <span class="stat-value"><%= totalBooks %></span>
+      <span class="stat-label">Total Titles</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon"></span>
+    <div class="stat-info">
+      <span class="stat-value"><%= totalQuantity %></span>
+      <span class="stat-label">Total Stock</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon"></span>
+    <div class="stat-info">
+      <span class="stat-value"><%= categories.length %></span>
+      <span class="stat-label">Categories</span>
+    </div>
+  </div>
+</div>
+<div class="filters-section">
+  <form action="/books" method="GET" class="filters-form">
+    <div class="filter-group">
+      <input type="text" name="search" placeholder=" Search by title or author..." 
+             value="<%= currentSearch %>" class="filter-input">
+    </div>
+    <div class="filter-group">
+      <select name="category" class="filter-select">
+        <option value="All" <%= currentCategory === 'All' ? 'selected' : '' %>>All Categories</option>
+        <% categories.forEach(cat => { %>
+          <option value="<%= cat %>" <%= currentCategory === cat ? 'selected' : '' %>><%= cat %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="filter-group">
+      <select name="sort" class="filter-select">
+        <option value="newest" <%= currentSort === 'newest' ? 'selected' : '' %>>Newest First</option>
+        <option value="title" <%= currentSort === 'title' ? 'selected' : '' %>>A-Z Title</option>
+        <option value="price_asc" <%= currentSort === 'price_asc' ? 'selected' : '' %>>Price: Low→High</option>
+        <option value="price_desc" <%= currentSort === 'price_desc' ? 'selected' : '' %>>Price: High→Low</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-secondary">Apply</button>
+    <a href="/books" class="btn btn-ghost">Reset</a>
+  </form>
+</div>
+<% if (books.length === 0) { %>
+  <div class="empty-state">
+    <div class="empty-icon"></div>
+    <h3>No books found</h3>
+    <p>Try adjusting your search filters or add a new book.</p>
+    <a href="/books/new" class="btn btn-primary">Add First Book</a>
+  </div>
+<% } else { %>
+  <div class="books-grid">
+    <% books.forEach(book => { %>
+      <div class="book-card">
+        <div class="book-img-wrap">
+          <img src="/uploads/<%= book.image %>" 
+               alt="<%= book.title %>"
+               onerror="this.src='/img/default-book.png'"
+               class="book-img">
+          <span class="book-category-badge"><%= book.category %></span>
+          <% if (book.quantity === 0) { %>
+            <span class="out-of-stock">Out of Stock</span>
+          <% } %>
+        </div>
+        <div class="book-body">
+          <h3 class="book-title"><%= book.title %></h3>
+          <p class="book-author">by <%= book.author %></p>
+          <div class="book-meta">
+            <span class="book-price">₹<%= book.price.toLocaleString('en-IN') %></span>
+            <span class="book-qty"><%= book.quantity %> in stock</span>
+          </div>
+          <% if (book.description) { %>
+            <p class="book-desc"><%= book.description.substring(0, 80) %><%= book.description.length > 80 ? '...' : '' %></p>
+          <% } %>
+          <div class="book-actions">
+            <a href="/books/<%= book._id %>" class="btn-sm btn-view">View</a>
+            <a href="/books/<%= book._id %>/edit" class="btn-sm btn-edit">Edit</a>
+            <form action="/books/<%= book._id %>?_method=DELETE" method="POST" 
+                  onsubmit="return confirm('Delete \'<%= book.title %>\'? This cannot be undone.')">
+              <button type="submit" class="btn-sm btn-delete">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>

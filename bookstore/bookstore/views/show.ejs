@@ -1,0 +1,59 @@
+<%- include('partials/header', { title: book.title }) %>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1 class="page-title">Book Details</h1>
+  </div>
+  <a href="/books" class="btn btn-ghost">← Back to Books</a>
+</div>
+
+<div class="book-detail-container">
+  <div class="book-detail-img-col">
+    <div class="book-detail-img-wrap">
+      <img src="/uploads/<%= book.image %>" 
+           alt="<%= book.title %>"
+           onerror="this.src='/img/default-book.png'"
+           class="book-detail-img">
+    </div>
+    <span class="detail-category-badge"><%= book.category %></span>
+  </div>
+
+  <div class="book-detail-info">
+    <h2 class="detail-title"><%= book.title %></h2>
+    <p class="detail-author">by <strong><%= book.author %></strong></p>
+
+    <div class="detail-stats">
+      <div class="detail-stat">
+        <span class="detail-stat-label">Price</span>
+        <span class="detail-stat-value price-tag">₹<%= book.price.toLocaleString('en-IN') %></span>
+      </div>
+      <div class="detail-stat">
+        <span class="detail-stat-label">In Stock</span>
+        <span class="detail-stat-value <%= book.quantity === 0 ? 'out-of-stock-text' : 'in-stock-text' %>">
+          <%= book.quantity === 0 ? 'Out of Stock' : book.quantity + ' copies' %>
+        </span>
+      </div>
+      <div class="detail-stat">
+        <span class="detail-stat-label">Added On</span>
+        <span class="detail-stat-value"><%= new Date(book.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) %></span>
+      </div>
+    </div>
+
+    <% if (book.description) { %>
+      <div class="detail-description">
+        <h4>Description</h4>
+        <p><%= book.description %></p>
+      </div>
+    <% } %>
+
+    <div class="detail-actions">
+      <a href="/books/<%= book._id %>/edit" class="btn btn-primary"> Edit Book</a>
+      <form action="/books/<%= book._id %>?_method=DELETE" method="POST" 
+            onsubmit="return confirm('Delete this book permanently?')">
+        <button type="submit" class="btn btn-danger"> Delete Book</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
